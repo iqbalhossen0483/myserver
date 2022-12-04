@@ -23,7 +23,10 @@ app.use("/orders", orderRouter);
 app.use("/blogs", blogRouter);
 
 app.get("/", (req, res) => {
-  res.send(`server is running in, ${port}`);
+  res.send({ message: `server is running in, ${port}` });
+});
+app.get("/test", (req, res) => {
+  res.send({ message: "okay" });
 });
 app.listen(port, () => {
   console.log("its running", port);
