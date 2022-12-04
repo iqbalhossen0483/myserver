@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const { mongoDb } = require("./mongoDb");
 const serviceRouter = require("./router/services");
 const gallaryRouter = require("./router/gallery");
 const orderRouter = require("./router/order");
@@ -11,29 +10,17 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-//database
-const client = mongoDb();
+//services
+app.use("/services", serviceRouter);
 
-async function run() {
-  try {
-    await client.connect();
+//gallery
+app.use("/gallery", gallaryRouter);
 
-    //services
-    app.use("/services", serviceRouter);
+//order
+app.use("/orders", orderRouter);
 
-    //gallery
-    app.use("/gallery", gallaryRouter);
-
-    //order
-    app.use("/orders", orderRouter);
-
-    //blog
-    app.use("/blogs", blogRouter);
-  } finally {
-    // client.close()
-  }
-}
-run().catch(console.dir);
+//blog
+app.use("/blogs", blogRouter);
 
 app.get("/", (req, res) => {
   res.send(`server is running in, ${port}`);
