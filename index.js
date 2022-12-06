@@ -20,6 +20,14 @@ app.get("/", (req, res) => {
   res.send({ message: `server is running in, ${port}` });
 });
 
+//error handler;
+app.use((err, req, res, next) => {
+  console.log("error", err);
+  res
+    .status(err.statusCode | 500)
+    .send({ message: err.message || err.error || "Internal error" });
+});
+
 app.listen(port, () => {
   console.log("its running", port);
 });

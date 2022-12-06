@@ -12,11 +12,19 @@ async function connectDb() {
 connectDb();
 const database = client.db("cycle-mart");
 const orders = database.collection("orders");
+const users = database.collection("users");
 
 //post order
 async function postOrder(req, res) {
-  const result = await orders.insertOne(req.body);
-  res.json(result);
+  try {
+    const result = await orders.insertOne(req.body);
+    //update user;
+    await users.updateOne({ email: req.body.email }, { $set: { cart: [] } });
+    await res.json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: error.message });
+  }
 }
 
 //get order
