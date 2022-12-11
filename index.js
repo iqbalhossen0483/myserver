@@ -5,6 +5,7 @@ const hospital = require("./router/hospital");
 const cycleMart = require("./router/cyclemart");
 const prortfolio = require("./router/portfolio");
 const appartment = require("./router/appartment");
+const food = require("./router/food");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -17,6 +18,7 @@ app.use("/hospital", hospital);
 app.use("/cyclemart", cycleMart);
 app.use("/portfolio", prortfolio);
 app.use("/appartment", appartment);
+app.use("/food", food);
 
 app.get("/", (req, res) => {
   res.send({ message: `server is running in, ${port}` });
