@@ -17,7 +17,6 @@ const products = database.collection("products");
 async function getProducts(req, res, next) {
   try {
     if (req.query.brand) {
-      console.log(req.query.brand);
       getBrandProduct(req, res, next);
     } else if (req.query.type) {
       getProductByType(req, res, next);
