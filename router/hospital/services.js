@@ -36,6 +36,18 @@ async function services() {
       const result = await services.deleteOne(quary);
       res.json(result);
     });
+
+    //update
+    serviceRouter.put("/", async (req, res, next) => {
+      try {
+        const _id = ObjectId(req.body.id);
+        delete req.body.id;
+        const result = await services.updateOne({ _id }, { $set: req.body });
+        res.send(result);
+      } catch (error) {
+        next({ message: error.message });
+      }
+    });
   } finally {
     // await client.close();
   }

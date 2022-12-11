@@ -14,117 +14,150 @@ const database = client.db("cycle-mart");
 const products = database.collection("products");
 
 //get products
-async function getProducts(req, res) {
-  const result = await products.find({}).toArray();
-  res.send(result);
+async function getProducts(req, res, next) {
+  try {
+    if (req.query.brand) {
+      console.log(req.query.brand);
+      getBrandProduct(req, res, next);
+    } else if (req.query.type) {
+      getProductByType(req, res, next);
+    } else if (req.query.min && req.query.max) {
+      getProductByPrice(req, res, next);
+    } else {
+      const result = await products.find({}).toArray();
+      res.send(result);
+    }
+  } catch (error) {
+    next(error);
+  }
 }
 
 //post product
-async function postProduct(req, res) {
-  products
-    .insertOne(req.body)
-    .then((result) => res.send(result))
-    .catch((err) => {
-      if (req.body.productImg.imgId) {
-        deleteImage(req.body.productImg.imgId);
-      }
-      if (req.body.imgGallery?.length) {
-        req.body.imgGallery.forEach((img) => {
-          deleteImage(img.imgId);
-        });
-      }
-      res.send(err);
-    });
+async function postProduct(req, res, next) {
+  try {
+    req.body.price = parseInt(req.body.price);
+    req.body.stock = parseInt(req.body.stock);
+    req.body.created_at = new Date().toISOString();
+    const result = await products.insertOne(req.body);
+    res.send(result);
+  } catch (error) {
+    if (req.body.productImg.imgId) {
+      deleteImage(req.body.productImg.imgId);
+    }
+    if (req.body.imgGallery?.length) {
+      req.body.imgGallery.forEach((img) => {
+        deleteImage(img.imgId);
+      });
+    }
+    next(error);
+  }
 }
 
 //update product
-async function updateProduct(req, res) {
-  const id = req.body.id;
-  delete req.body.id;
-  delete req.body.productImgId;
-  delete req.body.Gallery;
-  const filter = { _id: ObjectId(id) };
-  const updateDoc = { $set: req.body };
-  const result = await products.updateOne(filter, updateDoc);
-  res.send(result);
+async function updateProduct(req, res, next) {
+  try {
+    const id = req.body.id;
+    delete req.body.id;
+    delete req.body.productImgId;
+    delete req.body.Gallery;
+    delete req.body.img;
+    delete req.body.gallery;
+    if (req.body.price) req.body.price = parseInt(req.body.price);
+    if (req.body.stock) req.body.stock = parseInt(req.body.stock);
+    req.body.created_at = new Date().toISOString();
+    const filter = { _id: ObjectId(id) };
+    const updateDoc = { $set: req.body };
+    const result = await products.updateOne(filter, updateDoc);
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
 }
 
 //products for home page
-async function getProductsForHome(req, res) {
-  const result = await products.find({}).limit(8).toArray();
-  res.send(result);
+async function getProductsForHome(req, res, next) {
+  try {
+    const result = await products.find({}).limit(8).toArray();
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
 }
 
 //search products
-async function searchProduct(req, res) {
-  const text = req.params.text;
-  const result = await products.find({ $text: { $search: text } }).toArray();
-  res.send(result);
+async function searchProduct(req, res, next) {
+  try {
+    const text = req.params.text;
+    const result = await products.find({ $text: { $search: text } }).toArray();
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
 }
 
 //category product
-async function getCategoryProduct(req, res) {
-  const categoryName = req.params.name;
-  const quary = { category: categoryName };
-  const result = await products.find(quary).toArray();
-  res.send(result);
+async function getCategoryProduct(req, res, next) {
+  try {
+    const categoryName = req.params.name;
+    const quary = { category: categoryName };
+    const result = await products.find(quary).toArray();
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
 }
 
 //get rendom product
-async function getRandomProduct(req, res) {
-  const number = parseInt(req.params.num);
-  const result = await products.find({}).skip(number).limit(1).toArray();
-  res.send(result);
+async function getRandomProduct(req, res, next) {
+  try {
+    const number = parseInt(req.params.num);
+    const result = await products.find({}).skip(number).limit(1).toArray();
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
 }
 
 //get product by brand name
 async function getBrandProduct(req, res) {
-  let brandName = [];
-  const brand = req.params.brand;
-  if (!brand.includes("&&")) {
-    brandName = [brand];
-  } else {
-    const brands = brand.split("&&");
-    brandName = brands;
+  try {
+    let brandName = [];
+    const brand = req.query.brand;
+    if (brand.includes("|")) brandName = brand.split("|");
+    else brandName = [brand];
+    const result = await products.find({ brand: { $in: brandName } }).toArray();
+    res.send(result);
+  } catch (error) {
+    throw error;
   }
-  const quary = {
-    vendor: {
-      $in: brandName,
-    },
-  };
-  const result = await products.find(quary).toArray();
-  res.send(result);
 }
 
 //get product by type
 async function getProductByType(req, res) {
-  let typeName = [];
-  const type = req.params.type;
-  if (!type.includes("&&")) {
-    typeName = [type];
-  } else {
-    const types = type.split("&&");
-    typeName = types;
+  try {
+    let typeName = [];
+    const type = req.query.type;
+    if (type.includes("|")) typeName = type.split("|");
+    else typeName = [type];
+    const result = await products.find({ type: { $in: typeName } }).toArray();
+    res.send(result);
+  } catch (error) {
+    throw error;
   }
-  const quary = {
-    type: {
-      $in: typeName,
-    },
-  };
-  const result = await products.find(quary).toArray();
-  res.send(result);
 }
 
 //product by price range
 async function getProductByPrice(req, res) {
-  const from = req.query.from;
-  const till = req.query.till;
-  const quary = {
-    price: { $gte: from },
-    price: { $lt: till },
-  };
-  const result = await products.find(quary).toArray();
-  res.send(result);
+  try {
+    const quary = {
+      price: { $gte: parseInt(req.query.min) },
+      price: { $lt: parseInt(req.query.max) },
+    };
+    const result = await products.find(quary).toArray();
+    res.send(result);
+  } catch (error) {
+    throw error;
+  }
 }
 
 // get product by id

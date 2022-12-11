@@ -10,9 +10,6 @@ const {
   getProductsForHome,
   getCategoryProduct,
   getRandomProduct,
-  getBrandProduct,
-  getProductByType,
-  getProductByPrice,
   getProductById,
   deleteProduct,
   searchProduct,
@@ -51,15 +48,6 @@ productRouter.get("/category/:name", getCategoryProduct);
 
 //get rendom product
 productRouter.get("/rendom/:num", getRandomProduct);
-
-//get product by brand name
-productRouter.get("/brand/:brand", getBrandProduct);
-
-//get product by type
-productRouter.get("/type/:type", getProductByType);
-
-//product by price range
-productRouter.get("/price/byrange", getProductByPrice);
 
 // get product by id
 productRouter.get("/:id", getProductById);

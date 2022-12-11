@@ -22,9 +22,8 @@ app.get("/", (req, res) => {
 
 //error handler;
 app.use((err, req, res, next) => {
-  console.log("error", err);
   res
-    .status(err.statusCode | 500)
+    .status(err.statusCode || 500)
     .send({ message: err.message || err.error || "Internal error" });
 });
 
