@@ -1,5 +1,5 @@
-const cloudinary = require("../cloudinary.confiq");
-const deleteImage = require("../deleteImage/deleteImage");
+const cloudinary = require("../../../../cloudinary/cloudinary.confiq");
+const deleteImage = require("../../../../cloudinary/delete/deleteImage");
 
 //uploder
 async function uploader(file) {

@@ -1,6 +1,4 @@
-const uploadProfile = require("../middleWare/cloudinary/upload/uploadProfile");
 const checkUser = require("../middleWare/userMiddleware");
-const multer = require("../middleWare/multer/multer");
 const express = require("express");
 const {
   makeUserToDb,
@@ -10,6 +8,8 @@ const {
   userCartUpdate,
   makeAdmin,
 } = require("./handler");
+const multer = require("../../../multer/multer");
+const uploadProfile = require("../middleWare/cloudinary/uploadProfile");
 
 const usersRouter = express.Router();
 

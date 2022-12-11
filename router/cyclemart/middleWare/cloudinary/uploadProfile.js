@@ -1,4 +1,4 @@
-const cloudinary = require("../cloudinary.confiq");
+const cloudinary = require("../../../../cloudinary/cloudinary.confiq");
 
 module.exports = uPloadProfile = (req, res, next) => {
   const file = req.file?.path;

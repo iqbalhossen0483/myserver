@@ -1,6 +1,4 @@
-const productImgUpload = require("../middleWare/cloudinary/upload/productImgUpload");
 const checkUser = require("../middleWare/userMiddleware");
-const multer = require("../middleWare/multer/multer");
 const express = require("express");
 const productRouter = express.Router();
 const {
@@ -14,6 +12,8 @@ const {
   deleteProduct,
   searchProduct,
 } = require("./handler");
+const multer = require("../../../multer/multer");
+const productImgUpload = require("../middleWare/cloudinary/productImgUpload");
 
 productRouter
   .route("/")

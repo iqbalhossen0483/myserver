@@ -1,5 +1,5 @@
+const deleteImage = require("../../../cloudinary/delete/deleteImage");
 const { mongoDb } = require("../../../mongoDb");
-const deleteImage = require("../middleWare/cloudinary/deleteImage/deleteImage");
 
 const client = mongoDb();
 

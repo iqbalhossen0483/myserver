@@ -1,6 +1,6 @@
-const deleteImage = require("../middleWare/cloudinary/deleteImage/deleteImage");
 const { mongoDb } = require("../../../mongoDb");
 const jwt = require("jsonwebtoken");
+const deleteImage = require("../../../cloudinary/delete/deleteImage");
 
 const client = mongoDb();
 
