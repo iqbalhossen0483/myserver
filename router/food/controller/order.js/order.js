@@ -22,10 +22,10 @@ async function postOrder(req, res, next) {
 //get order
 async function getOrder(req, res, next) {
   try {
-    if (req.headers.email === req.varifyEmail) {
-      const result = await orders.find({}).toArray();
-      res.send(result);
-    } else next({ message: "Authentication failed" });
+    const result = await orders.find({}).toArray();
+    res.send(result);
+    if (!result.length) return next({ message: "Authentication failed" });
+    res.send(result);
   } catch (err) {
     next(err);
   }
@@ -33,10 +33,9 @@ async function getOrder(req, res, next) {
 
 async function getOrderByEmail(req, res, next) {
   try {
-    if (req.params.email === req.varifyEmail) {
-      const result = await orders.find({ email: req.params.email }).toArray();
-      res.send(result);
-    } else next({ message: "Authentication failed" });
+    const result = await orders.find({ email: req.params.email }).toArray();
+    if (!result.length) return next({ message: "Authentication failed" });
+    res.send(result);
   } catch (err) {
     next(err);
   }
