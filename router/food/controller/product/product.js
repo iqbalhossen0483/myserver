@@ -14,6 +14,7 @@ const products = database.collection("products");
 //post product
 async function postProduct(req, res, next) {
   try {
+    req.body.tags = req.body.tags.split("|").map((item) => item.trim());
     const result = await products.insertOne(req.body);
     res.send(result);
   } catch (error) {
@@ -25,7 +26,6 @@ async function postProduct(req, res, next) {
 async function getProduct(req, res, next) {
   try {
     const result = await products.find({}).toArray();
-    console.log(result);
     res.send(result);
   } catch (err) {
     next(err);
@@ -36,6 +36,7 @@ async function getProduct(req, res, next) {
 async function getProductById(req, res, next) {
   try {
     const result = await products.findOne({ _id: ObjectId(req.params.id) });
+    if (!result) return next({ message: "No product found" });
     res.send(result);
   } catch (err) {
     next(err);

@@ -28,10 +28,9 @@ async function postUser(req, res, next) {
 //get user by email
 async function getUser(req, res, next) {
   try {
-    if (req.headers.email === req.varifyEmail) {
-      const result = await users.findOne({ email: req.params.email });
-      res.send(result);
-    } else next({ message: "Authentication failed" });
+    const result = await users.findOne({ email: req.params.email });
+    if (result.role === "admin") res.send(result);
+    else throw { message: "unauthenticated" };
   } catch (err) {
     next(err);
   }
