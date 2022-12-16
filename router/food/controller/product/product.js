@@ -14,10 +14,11 @@ const products = database.collection("products");
 //post product
 async function postProduct(req, res, next) {
   try {
-    req.body.tags = req.body.tags.split("|").map((item) => item.trim());
+    req.body.tag = req.body.tag.split("|").map((item) => item.trim());
     const result = await products.insertOne(req.body);
     res.send(result);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 }
