@@ -29,8 +29,7 @@ async function postUser(req, res, next) {
 async function getUser(req, res, next) {
   try {
     const result = await users.findOne({ email: req.params.email });
-    if (result.role === "admin") res.send(result);
-    else throw { message: "unauthenticated" };
+    res.send(result);
   } catch (err) {
     next(err);
   }
