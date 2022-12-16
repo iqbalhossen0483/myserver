@@ -33,8 +33,20 @@ async function getOrder(req, res, next) {
 
 async function getOrderByEmail(req, res, next) {
   try {
-    const result = await orders.find({ email: req.params.email }).toArray();
-    if (!result.length) return next({ message: "Authentication failed" });
+    const result = await orders
+      .aggregate([
+        {
+          $lookup: {
+            from: "products",
+            localField: "productId",
+            foreignField: "_id",
+            as: "product",
+          },
+        },
+        { $project: { _id: 1, product: 1 } },
+      ])
+      .toArray();
+    if (!result.length) return next({ message: "No order found", status: 404 });
     res.send(result);
   } catch (err) {
     next(err);
