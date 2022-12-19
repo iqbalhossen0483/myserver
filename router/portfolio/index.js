@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-prortfolio.post("/users", async (req, res, next) => {
+prortfolio.post("/", async (req, res, next) => {
   try {
     const mailOptionsForClient = {
       from: "rayhan.senbag.bd@gmail.com",
