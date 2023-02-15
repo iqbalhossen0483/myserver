@@ -32,6 +32,7 @@ prortfolio.post("/", async (req, res, next) => {
       res.send({ message: "success" });
     } else next({ message: "Failed to received" });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
