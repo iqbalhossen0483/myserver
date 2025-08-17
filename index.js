@@ -9,7 +9,15 @@ const food = require("./router/food");
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+const origins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(",")
+  : [];
+app.use(
+  cors({
+    origin: origins,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  })
+);
 app.use(express.json());
 
 //sites;
@@ -20,12 +28,12 @@ app.use("/portfolio", prortfolio);
 app.use("/appartment", appartment);
 app.use("/food", food);
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.send({ message: `server is running in, ${port}` });
 });
 
 //error handler
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
   console.log(err);
   res
     .status(err.statusCode || 500)

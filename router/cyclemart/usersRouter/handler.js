@@ -16,7 +16,7 @@ async function makeUserToDb(req, res) {
     await users.updateOne(filter, user, options);
     const token = jwt.sign(
       { admin: false, user: req.body },
-      process.env.JWT_SECRATE,
+      process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
     res.send({ admin: false, token });
@@ -35,12 +35,12 @@ async function logInUser(req, res) {
     const user = await users.findOne(filter);
     if (!user) throw { message: "No user found" };
     if (user?.role === "admin") {
-      const token = jwt.sign({ admin: true, user }, process.env.JWT_SECRATE, {
+      const token = jwt.sign({ admin: true, user }, process.env.JWT_SECRET, {
         expiresIn: "10h",
       });
       res.send({ admin: true, token: token, user: user });
     } else if (user.email) {
-      const token = jwt.sign({ admin: false, user }, process.env.JWT_SECRATE, {
+      const token = jwt.sign({ admin: false, user }, process.env.JWT_SECRET, {
         expiresIn: "7d",
       });
       res.send({ admin: false, token: token, user: user });

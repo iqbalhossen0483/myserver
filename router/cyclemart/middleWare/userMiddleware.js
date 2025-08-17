@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
 
-const checkUser = async (req, res, next) => {
+const checkUser = async (req, _res, next) => {
   try {
     const { authorization } = req.headers;
     if (!authorization) throw { message: "Athentication failure", status: 401 };
     const token = authorization.split(" ")[1].replace('"', "");
-    const decoded = jwt.verify(token, process.env.JWT_SECRATE);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const { user, admin } = decoded;
     req.user = user;
     req.admin = admin;
